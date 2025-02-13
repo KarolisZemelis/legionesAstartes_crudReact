@@ -1,17 +1,11 @@
 import { useState, useEffect } from "react";
 import * as C from "./constants";
 
-export default function Create() {
+export default function Create({ setStoreData }) {
   const [legion, setLegion] = useState(C.defaultLegion);
   const [chapters, setChapters] = useState([]);
 
-  const handleTitle = (e) => {
-    setLegion((_) => ({ ...legion, [e.target.name]: e.target.value }));
-  };
-  const handleColor = (e) => {
-    setLegion((_) => ({ ...legion, [e.target.name]: e.target.value }));
-  };
-  const handleSize = (e) => {
+  const handleLegion = (e) => {
     setLegion((_) => ({ ...legion, [e.target.name]: e.target.value }));
   };
   const add = () => {
@@ -25,10 +19,14 @@ export default function Create() {
       c.map((chapter, i) => (i === index ? e.target.value : chapter))
     );
   };
-
-  useEffect(() => {
-    console.log(chapters);
-  }, [chapters]);
+  const saveLegion = () => {
+    setStoreData({
+      name: legion.name,
+      size: legion.size,
+      color_hex: legion.color_hex,
+      chapters: chapters,
+    });
+  };
 
   return (
     <div className="card my-5">
@@ -42,7 +40,7 @@ export default function Create() {
             type="text"
             name="name"
             className="form-control"
-            onChange={handleTitle}
+            onChange={handleLegion}
             value={legion.name}
           />
         </div>
@@ -52,7 +50,7 @@ export default function Create() {
             type="color"
             name="color_hex"
             className="form-control"
-            onChange={handleColor}
+            onChange={handleLegion}
             value={legion.color_hex}
           />
         </div>
@@ -64,7 +62,7 @@ export default function Create() {
             type="range"
             name="size"
             className="form-control"
-            onChange={handleSize}
+            onChange={handleLegion}
             value={legion.size}
             min={10}
             max={500}
@@ -91,7 +89,9 @@ export default function Create() {
           </button>
         </div>
 
-        <button className="green">Save</button>
+        <button className="green" onClick={saveLegion}>
+          Save
+        </button>
       </div>
     </div>
   );
