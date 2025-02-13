@@ -3,6 +3,7 @@ import "./buttons.scss";
 import axios from "axios";
 import Create from "./Components/Create";
 import List from "./Components/List";
+import Edit from "./Components/Edit";
 import { useState, useEffect } from "react";
 import * as C from "./Components/constants";
 
@@ -10,7 +11,7 @@ export default function App() {
   const [legions, setLegions] = useState([]);
 
   const [storeData, setStoreData] = useState(null);
-  const [dataReceived, setDataReceived] = useState(null);
+  const [editData, setEditData] = useState(null);
 
   useEffect((_) => {
     axios
@@ -38,20 +39,22 @@ export default function App() {
     [storeData]
   );
 
+  useEffect((_) => {}, [editData]);
+
   return (
     <div className="App">
-      <header className="App-header">
-        <div className="container text-container">
-          <div className="row">
-            <div className="col-4">
-              <Create setStoreData={setStoreData} />
-            </div>
-            <div className="col-8">
-              <List legions={legions} />
-            </div>
+      <div className="container text-container">
+        <div className="row">
+          <div className="col-4">
+            <Create setStoreData={setStoreData} />
+          </div>
+          <div className="col-8">
+            <List legions={legions} setEditData={setEditData} />
+            {editData !== null && <Edit editData={editData} />}
+            {/* <Edit editData={editData} /> */}
           </div>
         </div>
-      </header>
+      </div>
     </div>
   );
 }
