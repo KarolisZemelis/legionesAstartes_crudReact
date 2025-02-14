@@ -1,17 +1,40 @@
 @import "~bootstrap/scss/bootstrap";
 
-li {
-  .row {
+.ganykla {
+  display: flex;
+  .pen {
+    border: 1px solid black;
+    width: 49%;
     display: flex;
-    justify-content: space-around;
-    .legion-color {
-      width: 100px;
-      height: 100px;
+    flex-wrap: wrap;
+    gap: 3px;
+
+    .cow {
+      width: 80px;
+      height: 80px;
+      border: 1px solid black;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      :hover {
+        cursor: pointer;
+      }
+    }
+    .sheep {
+      width: 80px;
+      height: 80px;
+      border: 1px solid black;
       border-radius: 50px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      :hover {
+        cursor: pointer;
+      }
+    }
+    p {
+      font-size: 16px;
+      padding: 6px;
     }
   }
-}
-.modal {
-  display: block;
-  background-color: rgba(0, 0, 0, 0.5);
 }

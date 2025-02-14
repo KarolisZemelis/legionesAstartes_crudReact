@@ -1,57 +1,130 @@
-import "./crud.scss";
 import "./buttons.scss";
-import axios from "axios";
-import Create from "./Components/Create";
-import List from "./Components/List";
-import Edit from "./Components/Edit";
+import "./crud.scss";
+import rand from "./Components/rand";
+import randIdentifier from "./Components/randIdentifier";
+import * as D from "./Components/default";
+
 import { useState, useEffect } from "react";
-import * as C from "./Components/constants";
 
 export default function App() {
-  const [legions, setLegions] = useState([]);
+  const [animalCount, setAnimalCount] = useState({});
+  const [animals, setAnimals] = useState(D.defaultAnimals);
 
-  const [storeData, setStoreData] = useState(null);
-  const [editData, setEditData] = useState(null);
+  const handleAnimals = () => {
+    setAnimalCount((a) => ({ ...a, karves: rand(5, 20), avys: rand(5, 20) }));
+  };
+  const releaseAnimals = () => {
+    localStorage.removeItem("animals");
+    setAnimals(D.defaultAnimals);
+  };
+  const handleCow = (i) => {
+    let movingAnimal = animals.karves[i];
 
+    setAnimals((prevAnimals) => {
+      const updatedAnimals = {
+        ...prevAnimals,
+        karves: prevAnimals.karves.filter(
+          (karve) => karve.id !== movingAnimal.id
+        ),
+        avys: [...prevAnimals.avys, movingAnimal],
+      };
+      localStorage.setItem("animals", JSON.stringify(updatedAnimals));
+
+      return updatedAnimals;
+    });
+  };
+  const handleSheep = (i) => {
+    let movingAnimal = animals.avys[i];
+
+    setAnimals((prevAnimals) => {
+      const updatedAnimals = {
+        ...prevAnimals,
+        avys: prevAnimals.avys.filter((avis) => avis.id !== movingAnimal.id),
+        karves: [...prevAnimals.karves, movingAnimal],
+      };
+      localStorage.setItem("animals", JSON.stringify(updatedAnimals));
+
+      return updatedAnimals;
+    });
+    console.log(animals);
+  };
+
+  //on page render i get data from local storage and set animals state with data if local storage is empty nothing happens
   useEffect((_) => {
-    axios
-      .get(C.serverUrl)
-      .then((res) => {
-        console.log("gaunu response:", res.data);
-        setLegions(res.data);
-      })
-      .catch((error) => console.log(error));
+    const storedAnimals = localStorage.getItem("animals");
+    if (storedAnimals) {
+      try {
+        const parsedAnimals = JSON.parse(storedAnimals);
+        setAnimals(parsedAnimals);
+      } catch (error) {
+        console.error("Error parsing animals from localStorage:", error);
+      }
+    }
   }, []);
 
+  //when button is clicked it generates number counts, that triggers useEffect, which generates animal objects those animal objects are created and placed in local storage and also used to set animal state.
+  //*on reload these objects are overwritten from local storage */
+  //on reload animal count is initialized which counts as change in state which triggers the useEffect, therefore we are checking if animalCount is true or false if it doesnt exist the useEffect doesnt work
   useEffect(
     (_) => {
-      if (storeData === null) {
-        return;
-      }
-      console.log("storeData", storeData);
-      axios
-        .post(C.serverUrl, storeData)
-        .then((res) => {})
-        .catch((error) => {
-          console.error(error);
+      if (!animalCount.karves && !animalCount.avys) return;
+      let karves = [];
+      let avys = [];
+      for (let i = 0; i < animalCount.karves; i++) {
+        karves.push({
+          id: randIdentifier("K"),
+          style: "cow",
         });
+      }
+      for (let i = 0; i < animalCount.avys; i++) {
+        avys.push({
+          id: randIdentifier("A"),
+          style: "sheep",
+        });
+      }
+      localStorage.setItem(
+        "animals",
+        JSON.stringify({ karves: karves, avys: avys })
+      );
+      setAnimals({ karves: karves, avys: avys });
     },
-    [storeData]
+    [animalCount]
   );
-
-  useEffect((_) => {}, [editData]);
 
   return (
     <div className="App">
-      <div className="container text-container">
-        <div className="row">
-          <div className="col-4">
-            <Create setStoreData={setStoreData} />
+      <div className="farm">
+        <h1>Ganykla</h1>
+        <button className="red" onClick={handleAnimals}>
+          Į ganyklą
+        </button>
+        <button className="red" onClick={releaseAnimals}>
+          Į laukus
+        </button>
+        <div className="ganykla">
+          <div className="col 4 cows pen">
+            {animals.karves.length !== 0 &&
+              animals.karves.map((karve, i) => (
+                <div
+                  className={`${karve.style}`}
+                  key={karve.id}
+                  onClick={(_) => handleCow(i)}
+                >
+                  <p>{karve.id}</p>
+                </div>
+              ))}
           </div>
-          <div className="col-8">
-            <List legions={legions} setEditData={setEditData} />
-            {editData !== null && <Edit editData={editData} />}
-            {/* <Edit editData={editData} /> */}
+          <div className="col 4 sheep pen">
+            {animals.avys.length !== 0 &&
+              animals.avys.map((avis, i) => (
+                <div
+                  className={`${avis.style}`}
+                  key={avis.id}
+                  onClick={(_) => handleSheep(i)}
+                >
+                  <p>{avis.id}</p>
+                </div>
+              ))}
           </div>
         </div>
       </div>
