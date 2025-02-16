@@ -3,6 +3,8 @@ import "./crud.scss";
 import rand from "./Components/rand";
 import randIdentifier from "./Components/randIdentifier";
 import * as D from "./Components/default";
+import Sheep from "./Components/Sheep";
+import Cow from "./Components/Cow";
 
 import { useState, useEffect } from "react";
 
@@ -10,7 +12,7 @@ export default function App() {
   const [animalCount, setAnimalCount] = useState({});
   const [animals, setAnimals] = useState(D.defaultAnimals);
 
-  const handleAnimals = () => {
+  const handleAnimalCount = () => {
     setAnimalCount((a) => ({ ...a, karves: rand(5, 20), avys: rand(5, 20) }));
   };
   const releaseAnimals = () => {
@@ -46,7 +48,6 @@ export default function App() {
 
       return updatedAnimals;
     });
-    console.log(animals);
   };
 
   //on page render i get data from local storage and set animals state with data if local storage is empty nothing happens
@@ -73,15 +74,19 @@ export default function App() {
       for (let i = 0; i < animalCount.karves; i++) {
         karves.push({
           id: randIdentifier("K"),
+          type: "cow",
           style: "cow",
         });
       }
       for (let i = 0; i < animalCount.avys; i++) {
         avys.push({
           id: randIdentifier("A"),
+          type: "sheep",
           style: "sheep",
         });
       }
+      console.log(karves, "karves");
+      console.log(avys, "avys");
       localStorage.setItem(
         "animals",
         JSON.stringify({ karves: karves, avys: avys })
@@ -95,35 +100,25 @@ export default function App() {
     <div className="App">
       <div className="farm">
         <h1>Ganykla</h1>
-        <button className="red" onClick={handleAnimals}>
-          Į ganyklą
-        </button>
-        <button className="red" onClick={releaseAnimals}>
-          Į laukus
-        </button>
+        <div className="header">
+          <button className="red" onClick={handleAnimalCount}>
+            Į ganyklą
+          </button>
+          <button className="red" onClick={releaseAnimals}>
+            Į laukus
+          </button>
+        </div>
         <div className="ganykla">
-          <div className="col 4 cows pen">
+          <div className="col-4 cows pen">
             {animals.karves.length !== 0 &&
-              animals.karves.map((karve, i) => (
-                <div
-                  className={`${karve.style}`}
-                  key={karve.id}
-                  onClick={(_) => handleCow(i)}
-                >
-                  <p>{karve.id}</p>
-                </div>
+              animals.karves.map((karve, index) => (
+                <Cow karve={karve} index={index} handleCow={handleCow} />
               ))}
           </div>
-          <div className="col 4 sheep pen">
+          <div className="col-4 pen">
             {animals.avys.length !== 0 &&
-              animals.avys.map((avis, i) => (
-                <div
-                  className={`${avis.style}`}
-                  key={avis.id}
-                  onClick={(_) => handleSheep(i)}
-                >
-                  <p>{avis.id}</p>
-                </div>
+              animals.avys.map((avis, index) => (
+                <Sheep avis={avis} index={index} handleSheep={handleSheep} />
               ))}
           </div>
         </div>
