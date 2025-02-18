@@ -74,19 +74,15 @@ export default function App() {
       for (let i = 0; i < animalCount.karves; i++) {
         karves.push({
           id: randIdentifier("K"),
-          type: "cow",
           style: "cow",
         });
       }
       for (let i = 0; i < animalCount.avys; i++) {
         avys.push({
           id: randIdentifier("A"),
-          type: "sheep",
           style: "sheep",
         });
       }
-      console.log(karves, "karves");
-      console.log(avys, "avys");
       localStorage.setItem(
         "animals",
         JSON.stringify({ karves: karves, avys: avys })
@@ -110,12 +106,14 @@ export default function App() {
         </div>
         <div className="ganykla">
           <div className="col-4 cows pen">
+            <h3>MOOOOOO</h3>
             {animals.karves.length !== 0 &&
               animals.karves.map((karve, index) => (
                 <Cow karve={karve} index={index} handleCow={handleCow} />
               ))}
           </div>
           <div className="col-4 pen">
+            <h3>BAAAAAA</h3>
             {animals.avys.length !== 0 &&
               animals.avys.map((avis, index) => (
                 <Sheep avis={avis} index={index} handleSheep={handleSheep} />
