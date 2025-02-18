@@ -1,11 +1,11 @@
 import "./sheep.scss";
 
-export default function Sheep({ avis, index, handleSheep }) {
+export default function Sheep({ animal, handleClick }) {
   return (
     <div
-      className={`${avis.style} moving-div`}
-      key={avis.id}
-      onClick={(_) => handleSheep(index)}
+      className={`${animal.style} moving-div`}
+      key={animal.id}
+      onClick={(_) => handleClick(animal.id)}
     >
       <div className="head">
         <div className="eye left">
@@ -16,7 +16,7 @@ export default function Sheep({ avis, index, handleSheep }) {
         </div>
         <div className="nose"></div>
       </div>
-      <p>{avis.id}</p>
+      <p>{animal.id}</p>
       <div className="ear left"></div>
       <div className="ear right"></div>
       <div className="leg left"></div>

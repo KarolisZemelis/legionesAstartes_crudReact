@@ -1,11 +1,11 @@
 import "./cow.scss";
 
-export default function Cow({ karve, index, handleCow }) {
+export default function Cow({ animal, handleClick }) {
   return (
     <div
-      className={`${karve.style} moving-div`}
-      key={karve.id}
-      onClick={(_) => handleCow(index)}
+      className={`${animal.style} moving-div`}
+      key={animal.id}
+      onClick={(_) => handleClick(animal.id)}
     >
       <div className="head">
         <div className="eye left">
@@ -17,7 +17,7 @@ export default function Cow({ karve, index, handleCow }) {
         <div className="nose"></div>
       </div>
 
-      <p>{karve.id}</p>
+      <p>{animal.id}</p>
       <div className="ear left"></div>
       <div className="ear right"></div>
       <div className="leg left"></div>
